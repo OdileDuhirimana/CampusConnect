@@ -1,0 +1,124 @@
+import { useEffect, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { commentPost, createPost, fetchPosts, likePost, unlikePost } from '../store/postsSlice'
+import type { Post } from '../store/postsSlice'
+import type { RootState } from '../store'
+import { mediaUrl } from '../api'
+import { useToast } from '../components/ToastProvider'
+import Skeleton from '../components/Skeleton'
+import { addNotification } from '../store/notificationsSlice'
+import Avatar from '../components/Avatar'
+import { Button, Card, Textarea, Input, EmptyState } from '../components/ui'
+
+export default function Feed() {
+  const dispatch = useAppDispatch()
+  const { items, status } = useAppSelector((s: RootState) => s.posts)
+  const { token } = useAppSelector((s: RootState) => s.auth)
+  const [content, setContent] = useState('')
+  const [file, setFile] = useState<File | null>(null)
+  const [commentMap, setCommentMap] = useState<Record<number, string>>({})
+  const toast = useToast()
+
+  useEffect(() => {
+    dispatch(fetchPosts())
+  }, [dispatch])
+
+  const onCreate = async () => {
+    if (!token) {
+      toast.add({ type: 'info', message: 'Login to post' })
+      return
+    }
+    if (!content.trim()) return
+    await dispatch(createPost({ content, file }))
+    toast.add({ type: 'success', message: 'Post created' })
+    dispatch(addNotification({ title: 'New post', message: 'Your post is live' }))
+    setContent('')
+    setFile(null)
+  }
+
+  const onLike = async (id: number) => {
+    if (!token) { toast.add({ type: 'info', message: 'Login to like' }); return }
+    await dispatch(likePost(id))
+    toast.add({ type: 'success', message: 'Liked post' })
+    dispatch(addNotification({ title: 'You liked a post' }))
+  }
+
+  const onUnlike = async (id: number) => {
+    if (!token) { toast.add({ type: 'info', message: 'Login to unlike' }); return }
+    await dispatch(unlikePost(id))
+    toast.add({ type: 'info', message: 'Unliked post' })
+  }
+
+  const onComment = async (id: number) => {
+    if (!token) { toast.add({ type: 'info', message: 'Login to comment' }); return }
+    const text = (commentMap[id] || '').trim()
+    if (!text) return
+    await dispatch(commentPost({ postId: id, content: text }))
+    toast.add({ type: 'success', message: 'Comment added' })
+    dispatch(addNotification({ title: 'New comment', message: 'Your comment was added' }))
+    setCommentMap((m) => ({ ...m, [id]: '' }))
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto p-4 space-y-4">
+      <Card className="p-4">
+        <h2 className="font-semibold text-gray-900 mb-2">Create Post</h2>
+        <Textarea rows={3} placeholder="What's new?" value={content} onChange={(e) => setContent(e.target.value)} />
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3">
+          <Input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+          <Button aria-label="Create post" onClick={onCreate} type="button">Post</Button>
+        </div>
+      </Card>
+
+      <div className="space-y-3">
+        {status === 'loading' && (
+          <div className="space-y-3">
+            <Card className="p-4 space-y-3">
+              <Skeleton className="h-4 w-1/3" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-48 w-full" />
+            </Card>
+            <Card className="p-4 space-y-3">
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-full" />
+            </Card>
+          </div>
+        )}
+        {status === 'succeeded' && items.length === 0 && (
+          <EmptyState title="No posts yet" description="Be the first to post!" />
+        )}
+        {items.map((p: Post) => (
+          <Card key={p.id} className="p-4">
+            <div className="text-sm text-gray-600 flex items-center gap-2">
+              <Avatar name={p.user} />
+              <div><span className="font-medium text-gray-900">{p.user}</span> • {new Date(p.created_at).toLocaleString()}</div>
+            </div>
+            <div className="mt-2 whitespace-pre-wrap">{p.content}</div>
+            {p.media && (
+              <img src={mediaUrl(p.media)} alt="post" className="mt-2 max-h-80 object-contain rounded" />
+            )}
+            <div className="flex items-center gap-3 text-sm text-gray-600 mt-2">
+              <span>{p.likes_count} likes</span>
+              <button aria-label="Like" className="text-blue-600" onClick={() => onLike(p.id)} type="button">Like</button>
+              <button aria-label="Unlike" className="text-gray-600" onClick={() => onUnlike(p.id)} type="button">Unlike</button>
+            </div>
+            <div className="mt-3 space-y-2">
+              {p.comments?.map((c) => (
+                <div key={c.id} className="text-sm"><b>{c.user}</b>: {c.content}</div>
+              ))}
+              <div className="flex gap-2">
+                <input
+                  className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400"
+                  placeholder="Write a comment"
+                  value={commentMap[p.id] || ''}
+                  onChange={(e) => setCommentMap((m) => ({ ...m, [p.id]: e.target.value }))}
+                />
+                <Button aria-label="Send comment" className="px-3" size="sm" onClick={() => onComment(p.id)} type="button">Send</Button>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  )
+}
