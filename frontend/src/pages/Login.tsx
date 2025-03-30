@@ -6,6 +6,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useToast } from '../components/ToastProvider'
 import { addNotification } from '../store/notificationsSlice'
 import { Button, Input, Card } from '../components/ui'
+import AuthLayout from '../components/layout/AuthLayout'
 
 export default function Login() {
   const dispatch = useAppDispatch()
@@ -35,13 +36,9 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-sm p-6">
+    <AuthLayout title="Welcome back" subtitle="Sign in to continue.">
+      <Card className="p-6">
         <form onSubmit={onSubmit} className="space-y-4" aria-label="Login form">
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">Welcome back</h1>
-            <p className="text-sm text-gray-600">Sign in to continue.</p>
-          </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <Input
             label="Username"
@@ -66,6 +63,6 @@ export default function Login() {
           </p>
         </form>
       </Card>
-    </div>
+    </AuthLayout>
   )
 }
