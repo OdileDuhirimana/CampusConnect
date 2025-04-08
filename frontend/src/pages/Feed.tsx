@@ -16,12 +16,19 @@ export default function Feed() {
   const { token } = useAppSelector((s: RootState) => s.auth)
   const [content, setContent] = useState('')
   const [file, setFile] = useState<File | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
   const [commentMap, setCommentMap] = useState<Record<number, string>>({})
   const toast = useToast()
 
   useEffect(() => {
     dispatch(fetchPosts())
   }, [dispatch])
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview)
+    }
+  }, [preview])
 
   const onCreate = async () => {
     if (!token) {
@@ -34,6 +41,8 @@ export default function Feed() {
     dispatch(addNotification({ title: 'New post', message: 'Your post is live' }))
     setContent('')
     setFile(null)
+    if (preview) URL.revokeObjectURL(preview)
+    setPreview(null)
   }
 
   const onLike = async (id: number) => {
@@ -59,15 +68,38 @@ export default function Feed() {
     setCommentMap((m) => ({ ...m, [id]: '' }))
   }
 
+  const onSelectFile = (f?: File | null) => {
+    if (preview) URL.revokeObjectURL(preview)
+    if (f) {
+      setFile(f)
+      setPreview(URL.createObjectURL(f))
+    } else {
+      setFile(null)
+      setPreview(null)
+    }
+  }
+
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-4">
       <Card className="p-4">
         <h2 className="font-semibold text-gray-900 mb-2">Create Post</h2>
         <Textarea rows={3} placeholder="What's new?" value={content} onChange={(e) => setContent(e.target.value)} />
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3">
-          <Input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+          <Input type="file" accept="image/*" onChange={(e) => onSelectFile(e.target.files?.[0] || null)} />
           <Button aria-label="Create post" onClick={onCreate} type="button">Post</Button>
         </div>
+        {preview && (
+          <div className="mt-3 flex items-center gap-3">
+            <img src={preview} alt="Preview" className="h-20 w-20 rounded object-cover border" />
+            <button
+              className="text-sm text-red-600 hover:text-red-700"
+              type="button"
+              onClick={() => onSelectFile(null)}
+            >
+              Remove image
+            </button>
+          </div>
+        )}
       </Card>
 
       <div className="space-y-3">
