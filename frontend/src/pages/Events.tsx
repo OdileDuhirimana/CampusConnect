@@ -11,6 +11,7 @@ export default function Events() {
   const dispatch = useAppDispatch()
   const { items, status } = useAppSelector((s: RootState) => s.events)
   const { token } = useAppSelector((s: RootState) => s.auth)
+  const { user } = useAppSelector((s: RootState) => s.auth)
   const toast = useToast()
 
   const [title, setTitle] = useState('')
@@ -79,6 +80,11 @@ export default function Events() {
                 <h3 className="font-semibold">{ev.title}</h3>
                 <div className="text-sm text-gray-600">{new Date(ev.start_time).toLocaleString()} → {new Date(ev.end_time).toLocaleString()}</div>
                 <div className="text-sm text-gray-600">{ev.location}</div>
+                {user && ev.participants?.some(p => p.user === user.username) && (
+                  <div className="mt-2 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
+                    Your RSVP: {ev.participants?.find(p => p.user === user.username)?.rsvp_status || 'maybe'}
+                  </div>
+                )}
               </div>
               <div className="flex gap-2">
                 <Button size="sm" variant="ghost" className="text-green-700" onClick={() => onRSVP(ev.id, 'yes')} type="button">Going</Button>
