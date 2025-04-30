@@ -1,0 +1,162 @@
+import { useEffect, useMemo, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { createRoom, fetchMessages, fetchRooms, joinRoom, leaveRoom, sendMessage, setActiveRoom } from '../store/chatSlice'
+import type { RootState } from '../store'
+import { useToast } from '../components/ToastProvider'
+import Skeleton from '../components/Skeleton'
+import { addNotification } from '../store/notificationsSlice'
+import { API_ORIGIN } from '../api'
+import Avatar from '../components/Avatar'
+import { Button, Card, Input, EmptyState } from '../components/ui'
+
+export default function Chat() {
+  const dispatch = useAppDispatch()
+  const toast = useToast()
+  const { rooms, messagesByRoom, activeRoomId, status } = useAppSelector((s: RootState) => s.chat)
+  const { user, token } = useAppSelector((s: RootState) => s.auth)
+
+  const [roomName, setRoomName] = useState('')
+  const [msg, setMsg] = useState('')
+  const [ws, setWs] = useState<WebSocket | null>(null)
+
+  useEffect(() => {
+    dispatch(fetchRooms())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (activeRoomId) dispatch(fetchMessages(activeRoomId))
+  }, [activeRoomId, dispatch])
+
+  // Optional WebSocket live updates if backend supports Channels at /ws/chat/{id}/
+  useEffect(() => {
+    try {
+      ws?.close()
+    } catch {}
+    if (!activeRoomId) return
+    const wsUrl = API_ORIGIN.replace('http', 'ws') + `/ws/chat/${activeRoomId}/`
+    let socket: WebSocket | null = null
+    try {
+      socket = new WebSocket(wsUrl)
+      setWs(socket)
+      socket.onmessage = () => {
+        // On any message, refetch to stay consistent with server ordering
+        dispatch(fetchMessages(activeRoomId))
+      }
+    } catch {}
+    return () => {
+      try { socket?.close() } catch {}
+      setWs(null)
+    }
+  }, [activeRoomId, dispatch])
+
+  const activeMessages = useMemo(() => (activeRoomId ? (messagesByRoom[activeRoomId] || []) : []), [messagesByRoom, activeRoomId])
+
+  const onCreateRoom = async () => {
+    if (!token) { toast.add({ type: 'info', message: 'Login to create rooms' }); return }
+    if (!roomName.trim()) return
+    const room = await dispatch(createRoom({ name: roomName, is_group: true })).unwrap()
+    dispatch(setActiveRoom(room.id))
+    setRoomName('')
+    toast.add({ type: 'success', message: `Room "${room.name}" created` })
+  }
+
+  const onJoin = async (id: number) => {
+    if (!token) { toast.add({ type: 'info', message: 'Login to join rooms' }); return }
+    await dispatch(joinRoom(id))
+    dispatch(setActiveRoom(id))
+    toast.add({ type: 'success', message: 'Joined room' })
+  }
+
+  const onLeave = async (id: number) => {
+    if (!token) { toast.add({ type: 'info', message: 'Login to leave rooms' }); return }
+    await dispatch(leaveRoom(id))
+    if (activeRoomId === id) dispatch(setActiveRoom(undefined as any))
+    toast.add({ type: 'info', message: 'Left room' })
+  }
+
+  const onSend = async () => {
+    if (!token) { toast.add({ type: 'info', message: 'Login to send messages' }); return }
+    if (!activeRoomId) { toast.add({ type: 'info', message: 'Select a room' }); return }
+    const text = msg.trim()
+    if (!text) return
+    // Prefer WS if connected; fallback to REST
+    try {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ text }))
+      } else {
+        await dispatch(sendMessage({ room: activeRoomId, content: text }))
+      }
+      setMsg('')
+      dispatch(addNotification({ title: 'Message sent', message: text.slice(0, 50) }))
+    } catch {
+      toast.add({ type: 'error', message: 'Failed to send message' })
+    }
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <Card className="p-3">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="font-semibold">Rooms</h2>
+          {user && <span className="text-xs text-gray-500">{user.username}</span>}
+        </div>
+        <div className="flex gap-2 mb-3">
+          <Input className="flex-1" placeholder="Create room" value={roomName} onChange={(e) => setRoomName(e.target.value)} />
+          <Button onClick={onCreateRoom} size="sm" type="button" aria-label="Create room">Create</Button>
+        </div>
+        <div className="divide-y border rounded min-h-[200px]">
+          {status === 'loading' && (
+            <div className="p-3 space-y-2">
+              <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-3/5" />
+            </div>
+          )}
+          {status !== 'loading' && rooms.length === 0 && (
+            <div className="p-3 text-sm text-gray-500">No rooms yet. Create one to start chatting.</div>
+          )}
+          {rooms.map((r) => {
+            const isActive = r.id === activeRoomId
+            const isMember = !!r.members.find(m => m.id === user?.id)
+            return (
+              <div key={r.id} className={`p-3 text-sm flex items-center justify-between ${isActive ? 'bg-gray-50' : ''}`}>
+                <button className="text-left flex-1" onClick={() => dispatch(setActiveRoom(r.id))} type="button" aria-label={`Open room ${r.name}`}>
+                  <div className="font-medium">{r.name}</div>
+                  <div className="text-gray-500 text-xs">Members: {r.members.length}</div>
+                </button>
+                {isMember ? (
+                  <button className="text-xs text-red-600" onClick={() => onLeave(r.id)} type="button" aria-label="Leave room">Leave</button>
+                ) : (
+                  <button className="text-xs text-blue-600" onClick={() => onJoin(r.id)} type="button" aria-label="Join room">Join</button>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </Card>
+      <Card className="md:col-span-2 flex flex-col h-[70vh]">
+        <div className="border-b px-4 py-2 flex items-center justify-between">
+          <div className="font-semibold">{rooms.find(r => r.id === activeRoomId)?.name || 'Select a room'}</div>
+        </div>
+        <div className="flex-1 overflow-auto p-4 space-y-2 bg-gray-50">
+          {activeMessages.map((m) => (
+            <div key={m.id} className="text-sm flex items-start gap-2">
+              <Avatar name={m.sender.username} size={24} />
+              <div>
+                <div><span className="font-medium">{m.sender.username}</span> <span className="text-xs text-gray-500">{new Date(m.created_at).toLocaleTimeString()}</span></div>
+                <div>{m.content}</div>
+              </div>
+            </div>
+          ))}
+          {activeRoomId && activeMessages.length === 0 && (
+            <EmptyState title="No messages yet" description="Send the first message to start the conversation." className="bg-transparent border-none" />
+          )}
+        </div>
+        <div className="border-t p-3 flex gap-2">
+          <Input className="flex-1" placeholder={activeRoomId ? 'Type a message' : 'Select a room to start chatting'} value={msg} onChange={(e) => setMsg(e.target.value)} />
+          <Button onClick={onSend} type="button" aria-label="Send message">Send</Button>
+        </div>
+      </Card>
+    </div>
+  )
+}
