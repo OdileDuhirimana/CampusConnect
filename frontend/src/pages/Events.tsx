@@ -9,7 +9,7 @@ import { Button, Card, Input, Textarea, EmptyState } from '../components/ui'
 
 export default function Events() {
   const dispatch = useAppDispatch()
-  const { items, status } = useAppSelector((s: RootState) => s.events)
+  const { items, status, error } = useAppSelector((s: RootState) => s.events)
   const { token } = useAppSelector((s: RootState) => s.auth)
   const { user } = useAppSelector((s: RootState) => s.auth)
   const toast = useToast()
@@ -69,6 +69,9 @@ export default function Events() {
               <Skeleton className="h-4 w-1/3" />
             </Card>
           </div>
+        )}
+        {status === 'failed' && (
+          <EmptyState title="Failed to load events" description={error || 'Please try again.'} />
         )}
         {status === 'succeeded' && items.length === 0 && (
           <EmptyState title="No events yet" description="Create the first event to get started." />

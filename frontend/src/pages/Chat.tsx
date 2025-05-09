@@ -12,7 +12,7 @@ import { Button, Card, Input, EmptyState } from '../components/ui'
 export default function Chat() {
   const dispatch = useAppDispatch()
   const toast = useToast()
-  const { rooms, messagesByRoom, activeRoomId, status } = useAppSelector((s: RootState) => s.chat)
+  const { rooms, messagesByRoom, activeRoomId, status, error } = useAppSelector((s: RootState) => s.chat)
   const { user, token } = useAppSelector((s: RootState) => s.auth)
 
   const [roomName, setRoomName] = useState('')
@@ -110,6 +110,11 @@ export default function Chat() {
               <Skeleton className="h-4 w-2/3" />
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-4 w-3/5" />
+            </div>
+          )}
+          {status === 'failed' && (
+            <div className="p-3">
+              <EmptyState title="Failed to load rooms" description={error || 'Please try again.'} />
             </div>
           )}
           {status !== 'loading' && rooms.length === 0 && (

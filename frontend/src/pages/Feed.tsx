@@ -12,7 +12,7 @@ import { Button, Card, Textarea, Input, EmptyState } from '../components/ui'
 
 export default function Feed() {
   const dispatch = useAppDispatch()
-  const { items, status } = useAppSelector((s: RootState) => s.posts)
+  const { items, status, error } = useAppSelector((s: RootState) => s.posts)
   const { token } = useAppSelector((s: RootState) => s.auth)
   const [content, setContent] = useState('')
   const [file, setFile] = useState<File | null>(null)
@@ -115,6 +115,12 @@ export default function Feed() {
               <Skeleton className="h-4 w-full" />
             </Card>
           </div>
+        )}
+        {status === 'failed' && (
+          <EmptyState
+            title="Failed to load posts"
+            description={error || 'Please try again.'}
+          />
         )}
         {status === 'succeeded' && items.length === 0 && (
           <EmptyState title="No posts yet" description="Be the first to post!" />
