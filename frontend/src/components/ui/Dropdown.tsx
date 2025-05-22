@@ -13,7 +13,7 @@ export default function Dropdown({
     <div className="relative inline-flex">
       {anchor}
       {open && (
-        <div className="absolute right-0 mt-2 w-64 rounded-lg border border-gray-200 bg-white shadow-lg">
+        <div className="absolute right-0 mt-2 w-64 rounded-xl border border-border bg-white shadow-card">
           {children}
         </div>
       )}

@@ -29,8 +29,8 @@ export default function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={t.id}
             role="status"
-            className={`rounded shadow-lg px-4 py-3 w-80 text-sm text-white ${
-            t.type === 'success' ? 'bg-emerald-600' : t.type === 'error' ? 'bg-red-600' : 'bg-gray-900'
+            className={`rounded-2xl shadow-card px-4 py-3 w-80 text-sm text-white ${
+            t.type === 'success' ? 'bg-success' : t.type === 'error' ? 'bg-danger' : 'bg-ink-900'
           }`}>
             {t.title && <div className="font-semibold mb-0.5">{t.title}</div>}
             <div className="opacity-90">{t.message}</div>
