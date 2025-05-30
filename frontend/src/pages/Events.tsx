@@ -41,9 +41,9 @@ export default function Events() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-4 space-y-6">
-      <Card className="p-4 space-y-3">
-        <h2 className="font-semibold text-gray-900">Create Event</h2>
+    <div className="max-w-5xl mx-auto p-4 space-y-6">
+      <Card className="p-5 space-y-3 bg-gradient-to-br from-brand-50 to-white">
+        <h2 className="font-semibold text-ink-900">Create an event</h2>
         <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
         <Textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -77,26 +77,26 @@ export default function Events() {
           <EmptyState title="No events yet" description="Create the first event to get started." />
         )}
         {items.map((ev: EventItem) => (
-          <Card key={ev.id} className="p-4">
+          <Card key={ev.id} className="p-5 hover:shadow-soft transition">
             <div className="flex justify-between items-start">
               <div>
                 <h3 className="font-semibold">{ev.title}</h3>
-                <div className="text-sm text-gray-600">{new Date(ev.start_time).toLocaleString()} → {new Date(ev.end_time).toLocaleString()}</div>
-                <div className="text-sm text-gray-600">{ev.location}</div>
+                <div className="text-sm text-ink-600">{new Date(ev.start_time).toLocaleString()} → {new Date(ev.end_time).toLocaleString()}</div>
+                <div className="text-sm text-ink-600">{ev.location}</div>
                 {user && ev.participants?.some(p => p.user === user.username) && (
-                  <div className="mt-2 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">
+                  <div className="mt-2 inline-flex items-center rounded-full bg-brand-50 px-2 py-0.5 text-xs text-brand-700">
                     Your RSVP: {ev.participants?.find(p => p.user === user.username)?.rsvp_status || 'maybe'}
                   </div>
                 )}
               </div>
               <div className="flex gap-2">
-                <Button size="sm" variant="ghost" className="text-green-700" onClick={() => onRSVP(ev.id, 'yes')} type="button">Going</Button>
-                <Button size="sm" variant="ghost" className="text-yellow-700" onClick={() => onRSVP(ev.id, 'maybe')} type="button">Maybe</Button>
-                <Button size="sm" variant="ghost" className="text-red-700" onClick={() => onRSVP(ev.id, 'no')} type="button">No</Button>
+                <Button size="sm" variant="outline" className="border-success text-success" onClick={() => onRSVP(ev.id, 'yes')} type="button">Going</Button>
+                <Button size="sm" variant="outline" className="border-warning text-warning" onClick={() => onRSVP(ev.id, 'maybe')} type="button">Maybe</Button>
+                <Button size="sm" variant="outline" className="border-danger text-danger" onClick={() => onRSVP(ev.id, 'no')} type="button">No</Button>
               </div>
             </div>
             {ev.description && <p className="mt-2 whitespace-pre-wrap">{ev.description}</p>}
-            <div className="text-sm text-gray-600 mt-2">Participants: {ev.participants?.length ?? 0}</div>
+            <div className="text-sm text-ink-600 mt-2">Participants: {ev.participants?.length ?? 0}</div>
           </Card>
         ))}
       </div>

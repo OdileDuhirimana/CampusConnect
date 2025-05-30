@@ -95,10 +95,10 @@ export default function Chat() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Card className="p-3">
+      <Card className="p-4">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="font-semibold">Rooms</h2>
-          {user && <span className="text-xs text-gray-500">{user.username}</span>}
+          <h2 className="font-semibold text-ink-900">Rooms</h2>
+          {user && <span className="text-xs text-ink-500">{user.username}</span>}
         </div>
         <div className="flex gap-2 mb-3">
           <Input className="flex-1" placeholder="Create room" value={roomName} onChange={(e) => setRoomName(e.target.value)} />
@@ -118,21 +118,21 @@ export default function Chat() {
             </div>
           )}
           {status !== 'loading' && rooms.length === 0 && (
-            <div className="p-3 text-sm text-gray-500">No rooms yet. Create one to start chatting.</div>
+            <div className="p-3 text-sm text-ink-500">No rooms yet. Create one to start chatting.</div>
           )}
           {rooms.map((r) => {
             const isActive = r.id === activeRoomId
             const isMember = !!r.members.find(m => m.id === user?.id)
             return (
-              <div key={r.id} className={`p-3 text-sm flex items-center justify-between ${isActive ? 'bg-gray-50' : ''}`}>
+              <div key={r.id} className={`p-3 text-sm flex items-center justify-between ${isActive ? 'bg-brand-50' : ''}`}>
                 <button className="text-left flex-1" onClick={() => dispatch(setActiveRoom(r.id))} type="button" aria-label={`Open room ${r.name}`}>
                   <div className="font-medium">{r.name}</div>
-                  <div className="text-gray-500 text-xs">Members: {r.members.length}</div>
+                  <div className="text-ink-500 text-xs">Members: {r.members.length}</div>
                 </button>
                 {isMember ? (
-                  <button className="text-xs text-red-600" onClick={() => onLeave(r.id)} type="button" aria-label="Leave room">Leave</button>
+                  <button className="text-xs text-danger" onClick={() => onLeave(r.id)} type="button" aria-label="Leave room">Leave</button>
                 ) : (
-                  <button className="text-xs text-blue-600" onClick={() => onJoin(r.id)} type="button" aria-label="Join room">Join</button>
+                  <button className="text-xs text-brand-600" onClick={() => onJoin(r.id)} type="button" aria-label="Join room">Join</button>
                 )}
               </div>
             )
@@ -141,14 +141,14 @@ export default function Chat() {
       </Card>
       <Card className="md:col-span-2 flex flex-col h-[70vh]">
         <div className="border-b px-4 py-2 flex items-center justify-between">
-          <div className="font-semibold">{rooms.find(r => r.id === activeRoomId)?.name || 'Select a room'}</div>
+          <div className="font-semibold text-ink-900">{rooms.find(r => r.id === activeRoomId)?.name || 'Select a room'}</div>
         </div>
-        <div className="flex-1 overflow-auto p-4 space-y-2 bg-gray-50">
+        <div className="flex-1 overflow-auto p-4 space-y-2 bg-gradient-to-b from-brand-50/40 to-white">
           {activeMessages.map((m) => (
             <div key={m.id} className="text-sm flex items-start gap-2">
               <Avatar name={m.sender.username} size={24} />
               <div>
-                <div><span className="font-medium">{m.sender.username}</span> <span className="text-xs text-gray-500">{new Date(m.created_at).toLocaleTimeString()}</span></div>
+                <div><span className="font-medium">{m.sender.username}</span> <span className="text-xs text-ink-500">{new Date(m.created_at).toLocaleTimeString()}</span></div>
                 <div>{m.content}</div>
               </div>
             </div>

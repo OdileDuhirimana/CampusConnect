@@ -80,37 +80,38 @@ export default function Feed() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-4">
-      <Card className="p-4">
-        <h2 className="font-semibold text-gray-900 mb-2">Create Post</h2>
-        <Textarea rows={3} placeholder="What's new?" value={content} onChange={(e) => setContent(e.target.value)} />
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3">
-          <Input type="file" accept="image/*" onChange={(e) => onSelectFile(e.target.files?.[0] || null)} />
-          <Button aria-label="Create post" onClick={onCreate} type="button">Post</Button>
-        </div>
-        {preview && (
-          <div className="mt-3 flex items-center gap-3">
-            <img src={preview} alt="Preview" className="h-20 w-20 rounded object-cover border" />
-            <button
-              className="text-sm text-red-600 hover:text-red-700"
-              type="button"
-              onClick={() => onSelectFile(null)}
-            >
-              Remove image
-            </button>
+    <div className="max-w-6xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="lg:col-span-2 space-y-4">
+        <Card className="p-5 bg-gradient-to-br from-brand-50 to-white">
+          <h2 className="font-semibold text-ink-900 mb-2">Share something with campus</h2>
+          <Textarea rows={3} placeholder="What's happening on campus?" value={content} onChange={(e) => setContent(e.target.value)} />
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3">
+            <Input type="file" accept="image/*" onChange={(e) => onSelectFile(e.target.files?.[0] || null)} />
+            <Button aria-label="Create post" onClick={onCreate} type="button">Post</Button>
           </div>
-        )}
-      </Card>
+          {preview && (
+            <div className="mt-3 flex items-center gap-3">
+              <img src={preview} alt="Preview" className="h-20 w-20 rounded-xl object-cover border" />
+              <button
+                className="text-sm text-danger hover:text-red-700"
+                type="button"
+                onClick={() => onSelectFile(null)}
+              >
+                Remove image
+              </button>
+            </div>
+          )}
+        </Card>
 
-      <div className="space-y-3">
+        <div className="space-y-3">
         {status === 'loading' && (
           <div className="space-y-3">
-            <Card className="p-4 space-y-3">
+            <Card className="p-5 space-y-3">
               <Skeleton className="h-4 w-1/3" />
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-48 w-full" />
             </Card>
-            <Card className="p-4 space-y-3">
+            <Card className="p-5 space-y-3">
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-4 w-full" />
             </Card>
@@ -126,19 +127,19 @@ export default function Feed() {
           <EmptyState title="No posts yet" description="Be the first to post!" />
         )}
         {items.map((p: Post) => (
-          <Card key={p.id} className="p-4">
-            <div className="text-sm text-gray-600 flex items-center gap-2">
+          <Card key={p.id} className="p-5 hover:shadow-soft transition">
+            <div className="text-sm text-ink-600 flex items-center gap-2">
               <Avatar name={p.user} />
-              <div><span className="font-medium text-gray-900">{p.user}</span> • {new Date(p.created_at).toLocaleString()}</div>
+              <div><span className="font-medium text-ink-900">{p.user}</span> • {new Date(p.created_at).toLocaleString()}</div>
             </div>
             <div className="mt-2 whitespace-pre-wrap">{p.content}</div>
             {p.media && (
-              <img src={mediaUrl(p.media)} alt="post" className="mt-2 max-h-80 object-contain rounded" />
+              <img src={mediaUrl(p.media)} alt="post" className="mt-3 max-h-80 object-contain rounded-xl border border-border" />
             )}
-            <div className="flex items-center gap-3 text-sm text-gray-600 mt-2">
+            <div className="flex items-center gap-3 text-sm text-ink-600 mt-3">
               <span>{p.likes_count} likes</span>
-              <button aria-label="Like" className="text-blue-600" onClick={() => onLike(p.id)} type="button">Like</button>
-              <button aria-label="Unlike" className="text-gray-600" onClick={() => onUnlike(p.id)} type="button">Unlike</button>
+              <button aria-label="Like" className="text-brand-600" onClick={() => onLike(p.id)} type="button">Like</button>
+              <button aria-label="Unlike" className="text-ink-600" onClick={() => onUnlike(p.id)} type="button">Unlike</button>
             </div>
             <div className="mt-3 space-y-2">
               {p.comments?.map((c) => (
@@ -146,7 +147,7 @@ export default function Feed() {
               ))}
               <div className="flex gap-2">
                 <input
-                  className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400"
+                  className="flex-1 rounded-xl border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-400"
                   placeholder="Write a comment"
                   value={commentMap[p.id] || ''}
                   onChange={(e) => setCommentMap((m) => ({ ...m, [p.id]: e.target.value }))}
@@ -156,6 +157,23 @@ export default function Feed() {
             </div>
           </Card>
         ))}
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <Card className="p-5">
+          <h3 className="text-sm font-semibold text-ink-900">Campus Highlights</h3>
+          <ul className="mt-3 space-y-2 text-sm text-ink-600">
+            <li>🎓 Midterm week tips and resources</li>
+            <li>🏀 Intramurals sign‑ups closing Friday</li>
+            <li>📚 Library hours extended till 2 AM</li>
+          </ul>
+        </Card>
+        <Card className="p-5 bg-gradient-to-br from-accent-50 to-white">
+          <h3 className="text-sm font-semibold text-ink-900">Upcoming Events</h3>
+          <p className="mt-2 text-sm text-ink-600">Check out the latest campus events and RSVP.</p>
+          <Button className="mt-4" variant="outline">Explore Events</Button>
+        </Card>
       </div>
     </div>
   )
