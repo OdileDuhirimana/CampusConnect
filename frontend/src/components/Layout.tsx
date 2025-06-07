@@ -36,6 +36,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <span className="text-brand-600">Campus</span>Connect
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm">
+            <NavLink to="/dashboard" className={navLinkClass}>Dashboard</NavLink>
             <NavLink to="/" className={navLinkClass}>Feed</NavLink>
             <NavLink to="/events" className={navLinkClass}>Events</NavLink>
             <NavLink to="/chat" className={navLinkClass}>Messages</NavLink>
@@ -70,6 +71,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {mobileOpen && (
           <div className="md:hidden border-t border-border bg-white">
             <div className="px-4 py-3 flex flex-col gap-3 text-sm">
+              <NavLink to="/dashboard" className={navLinkClass} onClick={() => setMobileOpen(false)}>Dashboard</NavLink>
               <NavLink to="/" className={navLinkClass} onClick={() => setMobileOpen(false)}>Feed</NavLink>
               <NavLink to="/events" className={navLinkClass} onClick={() => setMobileOpen(false)}>Events</NavLink>
               <NavLink to="/chat" className={navLinkClass} onClick={() => setMobileOpen(false)}>Messages</NavLink>
@@ -91,7 +93,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
         )}
       </header>
-      <main id="main" className="max-w-7xl mx-auto px-4 py-6">
+      <main id="main" className="max-w-7xl mx-auto px-4 py-6 animate-fade-in">
         {children}
       </main>
     </div>

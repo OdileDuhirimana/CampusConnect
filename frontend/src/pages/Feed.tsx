@@ -8,7 +8,7 @@ import { useToast } from '../components/ToastProvider'
 import Skeleton from '../components/Skeleton'
 import { addNotification } from '../store/notificationsSlice'
 import Avatar from '../components/Avatar'
-import { Button, Card, Textarea, Input, EmptyState } from '../components/ui'
+import { Button, Card, Textarea, Input, EmptyState, Badge } from '../components/ui'
 
 export default function Feed() {
   const dispatch = useAppDispatch()
@@ -133,6 +133,10 @@ export default function Feed() {
               <div><span className="font-medium text-ink-900">{p.user}</span> • {new Date(p.created_at).toLocaleString()}</div>
             </div>
             <div className="mt-2 whitespace-pre-wrap">{p.content}</div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Badge variant="brand">Student Life</Badge>
+              <Badge variant="neutral">Campus</Badge>
+            </div>
             {p.media && (
               <img src={mediaUrl(p.media)} alt="post" className="mt-3 max-h-80 object-contain rounded-xl border border-border" />
             )}

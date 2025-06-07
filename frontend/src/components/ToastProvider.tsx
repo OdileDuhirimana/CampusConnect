@@ -29,7 +29,7 @@ export default function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={t.id}
             role="status"
-            className={`rounded-2xl shadow-card px-4 py-3 w-80 text-sm text-white ${
+            className={`rounded-2xl shadow-card px-4 py-3 w-80 text-sm text-white animate-slide-up ${
             t.type === 'success' ? 'bg-success' : t.type === 'error' ? 'bg-danger' : 'bg-ink-900'
           }`}>
             {t.title && <div className="font-semibold mb-0.5">{t.title}</div>}

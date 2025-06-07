@@ -5,7 +5,7 @@ import type { RootState } from '../store'
 import { useToast } from '../components/ToastProvider'
 import Skeleton from '../components/Skeleton'
 import { addNotification } from '../store/notificationsSlice'
-import { Button, Card, Input, Textarea, EmptyState } from '../components/ui'
+import { Button, Card, Input, Textarea, EmptyState, Badge } from '../components/ui'
 
 export default function Events() {
   const dispatch = useAppDispatch()
@@ -83,6 +83,10 @@ export default function Events() {
                 <h3 className="font-semibold">{ev.title}</h3>
                 <div className="text-sm text-ink-600">{new Date(ev.start_time).toLocaleString()} → {new Date(ev.end_time).toLocaleString()}</div>
                 <div className="text-sm text-ink-600">{ev.location}</div>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <Badge variant="brand">Campus</Badge>
+                  <Badge variant="accent">Club</Badge>
+                </div>
                 {user && ev.participants?.some(p => p.user === user.username) && (
                   <div className="mt-2 inline-flex items-center rounded-full bg-brand-50 px-2 py-0.5 text-xs text-brand-700">
                     Your RSVP: {ev.participants?.find(p => p.user === user.username)?.rsvp_status || 'maybe'}
