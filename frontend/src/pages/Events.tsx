@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { createEvent, fetchEvents, rsvpEvent, type EventItem } from '../store/eventsSlice'
 import type { RootState } from '../store'
@@ -19,6 +19,7 @@ export default function Events() {
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
   const [location, setLocation] = useState('')
+  const [filter, setFilter] = useState<'upcoming' | 'past' | 'all'>('upcoming')
 
   useEffect(() => {
     dispatch(fetchEvents())
@@ -40,8 +41,28 @@ export default function Events() {
     dispatch(addNotification({ title: 'RSVP updated', message: status }))
   }
 
+  const filteredEvents = useMemo(() => {
+    const now = new Date().getTime()
+    if (filter === 'all') return items
+    if (filter === 'past') return items.filter((e) => new Date(e.end_time).getTime() < now)
+    return items.filter((e) => new Date(e.end_time).getTime() >= now)
+  }, [items, filter])
+
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-6">
+      <Card className="p-6 bg-gradient-to-br from-brand-50 via-white to-accent-50">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-semibold text-ink-900">Campus Events</h1>
+            <p className="mt-1 text-sm text-ink-600">Discover meetups, clubs, and student‑led activities.</p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline">My RSVPs</Button>
+            <Button>Create Event</Button>
+          </div>
+        </div>
+      </Card>
+
       <Card className="p-5 space-y-3 bg-gradient-to-br from-brand-50 to-white">
         <h2 className="font-semibold text-ink-900">Create an event</h2>
         <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -55,6 +76,12 @@ export default function Events() {
           <Button onClick={onCreate}>Create</Button>
         </div>
       </Card>
+
+      <div className="flex flex-wrap gap-2">
+        <Button variant={filter === 'upcoming' ? 'primary' : 'outline'} size="sm" onClick={() => setFilter('upcoming')}>Upcoming</Button>
+        <Button variant={filter === 'past' ? 'primary' : 'outline'} size="sm" onClick={() => setFilter('past')}>Past</Button>
+        <Button variant={filter === 'all' ? 'primary' : 'outline'} size="sm" onClick={() => setFilter('all')}>All</Button>
+      </div>
 
       <div className="space-y-3">
         {status === 'loading' && (
@@ -76,7 +103,7 @@ export default function Events() {
         {status === 'succeeded' && items.length === 0 && (
           <EmptyState title="No events yet" description="Create the first event to get started." />
         )}
-        {items.map((ev: EventItem) => (
+        {filteredEvents.map((ev: EventItem) => (
           <Card key={ev.id} className="p-5 hover:shadow-soft transition">
             <div className="flex justify-between items-start">
               <div>

@@ -9,6 +9,7 @@ import Skeleton from '../components/Skeleton'
 import { addNotification } from '../store/notificationsSlice'
 import Avatar from '../components/Avatar'
 import { Button, Card, Textarea, Input, EmptyState, Badge } from '../components/ui'
+import CampusHighlights from '../components/widgets/CampusHighlights'
 
 export default function Feed() {
   const dispatch = useAppDispatch()
@@ -18,6 +19,7 @@ export default function Feed() {
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [commentMap, setCommentMap] = useState<Record<number, string>>({})
+  const [filter, setFilter] = useState<'all' | 'media' | 'text'>('all')
   const toast = useToast()
 
   useEffect(() => {
@@ -79,9 +81,28 @@ export default function Feed() {
     }
   }
 
+  const filteredItems = items.filter((p) => {
+    if (filter === 'media') return !!p.media
+    if (filter === 'text') return !p.media
+    return true
+  })
+
   return (
     <div className="max-w-6xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-4">
+        <Card className="p-6 bg-gradient-to-br from-brand-50 via-white to-accent-50">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-semibold text-ink-900">Campus Feed</h1>
+              <p className="mt-1 text-sm text-ink-600">See what’s happening around campus today.</p>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline">Explore Clubs</Button>
+              <Button>New Post</Button>
+            </div>
+          </div>
+        </Card>
+
         <Card className="p-5 bg-gradient-to-br from-brand-50 to-white">
           <h2 className="font-semibold text-ink-900 mb-2">Share something with campus</h2>
           <Textarea rows={3} placeholder="What's happening on campus?" value={content} onChange={(e) => setContent(e.target.value)} />
@@ -102,6 +123,12 @@ export default function Feed() {
             </div>
           )}
         </Card>
+
+        <div className="flex flex-wrap gap-2">
+          <Button variant={filter === 'all' ? 'primary' : 'outline'} size="sm" onClick={() => setFilter('all')}>All</Button>
+          <Button variant={filter === 'media' ? 'primary' : 'outline'} size="sm" onClick={() => setFilter('media')}>Media</Button>
+          <Button variant={filter === 'text' ? 'primary' : 'outline'} size="sm" onClick={() => setFilter('text')}>Text</Button>
+        </div>
 
         <div className="space-y-3">
         {status === 'loading' && (
@@ -126,7 +153,7 @@ export default function Feed() {
         {status === 'succeeded' && items.length === 0 && (
           <EmptyState title="No posts yet" description="Be the first to post!" />
         )}
-        {items.map((p: Post) => (
+        {filteredItems.map((p: Post) => (
           <Card key={p.id} className="p-5 hover:shadow-soft transition">
             <div className="text-sm text-ink-600 flex items-center gap-2">
               <Avatar name={p.user} />
@@ -165,14 +192,7 @@ export default function Feed() {
       </div>
 
       <div className="space-y-4">
-        <Card className="p-5">
-          <h3 className="text-sm font-semibold text-ink-900">Campus Highlights</h3>
-          <ul className="mt-3 space-y-2 text-sm text-ink-600">
-            <li>🎓 Midterm week tips and resources</li>
-            <li>🏀 Intramurals sign‑ups closing Friday</li>
-            <li>📚 Library hours extended till 2 AM</li>
-          </ul>
-        </Card>
+        <CampusHighlights />
         <Card className="p-5 bg-gradient-to-br from-accent-50 to-white">
           <h3 className="text-sm font-semibold text-ink-900">Upcoming Events</h3>
           <p className="mt-2 text-sm text-ink-600">Check out the latest campus events and RSVP.</p>
