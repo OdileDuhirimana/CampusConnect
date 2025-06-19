@@ -8,7 +8,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <Card className="p-6 bg-gradient-to-br from-brand-50 to-white">
+      <Card className="p-6 bg-gradient-to-br from-brand-50 via-white to-accent-50">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-ink-900">Welcome back{user ? `, ${user.username}` : ''}</h1>
@@ -27,14 +27,17 @@ export default function Dashboard() {
         <Card className="p-5">
           <div className="text-sm text-ink-600">Total Posts</div>
           <div className="text-2xl font-semibold text-ink-900 mt-1">{posts.length}</div>
+          <div className="mt-2 text-xs text-ink-500">+3 this week</div>
         </Card>
         <Card className="p-5">
           <div className="text-sm text-ink-600">Upcoming Events</div>
           <div className="text-2xl font-semibold text-ink-900 mt-1">{events.length}</div>
+          <div className="mt-2 text-xs text-ink-500">2 RSVPs pending</div>
         </Card>
         <Card className="p-5">
           <div className="text-sm text-ink-600">Notifications</div>
           <div className="text-2xl font-semibold text-ink-900 mt-1">3</div>
+          <div className="mt-2 text-xs text-ink-500">1 unread</div>
         </Card>
       </div>
 

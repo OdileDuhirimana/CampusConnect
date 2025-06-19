@@ -38,7 +38,7 @@ export default function Button({
   const isDisabled = disabled || isLoading
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 rounded-full transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 ${variantClasses[variant]} ${sizeClasses[size]} ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'hover:-translate-y-[1px]'} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-full transition duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2 ${variantClasses[variant]} ${sizeClasses[size]} ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'hover:-translate-y-[1px] active:translate-y-0 active:scale-[0.98]'} ${className}`}
       disabled={isDisabled}
       {...props}
     >

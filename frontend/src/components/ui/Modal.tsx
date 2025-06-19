@@ -22,7 +22,7 @@ export default function Modal({ open, title, onClose, children, footer }: Props)
         role="dialog"
         aria-modal="true"
         aria-label={title || 'Dialog'}
-        className="relative z-10 w-full max-w-lg rounded-2xl bg-white p-6 shadow-card animate-slide-up"
+        className="relative z-10 w-full max-w-lg rounded-2xl bg-white p-6 shadow-card animate-float-in"
       >
         {title && <h2 className="text-base font-semibold text-gray-900">{title}</h2>}
         <div className="mt-3 text-sm text-gray-700">{children}</div>
