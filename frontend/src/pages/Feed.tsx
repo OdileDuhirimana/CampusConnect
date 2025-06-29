@@ -20,6 +20,7 @@ export default function Feed() {
   const [preview, setPreview] = useState<string | null>(null)
   const [commentMap, setCommentMap] = useState<Record<number, string>>({})
   const [filter, setFilter] = useState<'all' | 'media' | 'text'>('all')
+  const [tagFilter, setTagFilter] = useState<'all' | 'dorm' | 'club' | 'class' | 'event'>('all')
   const toast = useToast()
 
   useEffect(() => {
@@ -85,6 +86,9 @@ export default function Feed() {
     if (filter === 'media') return !!p.media
     if (filter === 'text') return !p.media
     return true
+  }).filter(() => {
+    if (tagFilter === 'all') return true
+    return true
   })
 
   return (
@@ -129,6 +133,13 @@ export default function Feed() {
           <Button variant={filter === 'media' ? 'primary' : 'outline'} size="sm" onClick={() => setFilter('media')}>Media</Button>
           <Button variant={filter === 'text' ? 'primary' : 'outline'} size="sm" onClick={() => setFilter('text')}>Text</Button>
         </div>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant={tagFilter === 'all' ? 'brand' : 'neutral'} className="cursor-pointer" onClick={() => setTagFilter('all')}>All</Badge>
+          <Badge variant={tagFilter === 'dorm' ? 'brand' : 'neutral'} className="cursor-pointer" onClick={() => setTagFilter('dorm')}>Dorm</Badge>
+          <Badge variant={tagFilter === 'club' ? 'brand' : 'neutral'} className="cursor-pointer" onClick={() => setTagFilter('club')}>Club</Badge>
+          <Badge variant={tagFilter === 'class' ? 'brand' : 'neutral'} className="cursor-pointer" onClick={() => setTagFilter('class')}>Class</Badge>
+          <Badge variant={tagFilter === 'event' ? 'brand' : 'neutral'} className="cursor-pointer" onClick={() => setTagFilter('event')}>Event</Badge>
+        </div>
 
         <div className="space-y-3">
         {status === 'loading' && (
@@ -161,8 +172,9 @@ export default function Feed() {
             </div>
             <div className="mt-2 whitespace-pre-wrap">{p.content}</div>
             <div className="mt-3 flex flex-wrap gap-2">
-              <Badge variant="brand">Student Life</Badge>
-              <Badge variant="neutral">Campus</Badge>
+              <Badge variant="brand">Dorm</Badge>
+              <Badge variant="accent">Club</Badge>
+              <Badge variant="neutral">Class</Badge>
             </div>
             {p.media && (
               <img src={mediaUrl(p.media)} alt="post" className="mt-3 max-h-80 object-contain rounded-xl border border-border" />

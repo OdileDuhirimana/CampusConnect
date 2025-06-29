@@ -15,13 +15,19 @@ export default function Badge({
   children,
   variant = 'neutral',
   className = '',
+  onClick,
 }: {
   children: ReactNode
   variant?: Variant
   className?: string
+  onClick?: () => void
 }) {
   return (
-    <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium ${variantClasses[variant]} ${className}`}>
+    <span
+      role={onClick ? 'button' : undefined}
+      onClick={onClick}
+      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium transition hover:-translate-y-[1px] ${variantClasses[variant]} ${className}`}
+    >
       {children}
     </span>
   )

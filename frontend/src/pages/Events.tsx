@@ -111,8 +111,9 @@ export default function Events() {
                 <div className="text-sm text-ink-600">{new Date(ev.start_time).toLocaleString()} → {new Date(ev.end_time).toLocaleString()}</div>
                 <div className="text-sm text-ink-600">{ev.location}</div>
                 <div className="mt-2 flex flex-wrap gap-2">
-                  <Badge variant="brand">Campus</Badge>
+                  <Badge variant="brand">Event</Badge>
                   <Badge variant="accent">Club</Badge>
+                  <Badge variant="neutral">Class</Badge>
                 </div>
                 {user && ev.participants?.some(p => p.user === user.username) && (
                   <div className="mt-2 inline-flex items-center rounded-full bg-brand-50 px-2 py-0.5 text-xs text-brand-700">
