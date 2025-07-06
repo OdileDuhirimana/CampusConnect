@@ -10,6 +10,9 @@ import { addNotification } from '../store/notificationsSlice'
 import Avatar from '../components/Avatar'
 import { Button, Card, Textarea, Input, EmptyState, Badge } from '../components/ui'
 import CampusHighlights from '../components/widgets/CampusHighlights'
+import ClubsWidget from '../components/widgets/ClubsWidget'
+import StudyGroupsWidget from '../components/widgets/StudyGroupsWidget'
+import TrendingWidget from '../components/widgets/TrendingWidget'
 
 export default function Feed() {
   const dispatch = useAppDispatch()
@@ -82,12 +85,19 @@ export default function Feed() {
     }
   }
 
+  const getTags = (text: string) => {
+    const t = text.toLowerCase()
+    const tags: Array<'dorm' | 'club' | 'class' | 'event'> = []
+    if (t.includes('dorm') || t.includes('room') || t.includes('residence')) tags.push('dorm')
+    if (t.includes('club') || t.includes('society')) tags.push('club')
+    if (t.includes('class') || t.includes('lecture') || t.includes('exam')) tags.push('class')
+    if (t.includes('event') || t.includes('meetup') || t.includes('workshop')) tags.push('event')
+    return tags.length ? tags : ['dorm', 'club']
+  }
+
   const filteredItems = items.filter((p) => {
     if (filter === 'media') return !!p.media
     if (filter === 'text') return !p.media
-    return true
-  }).filter(() => {
-    if (tagFilter === 'all') return true
     return true
   })
 
@@ -164,7 +174,10 @@ export default function Feed() {
         {status === 'succeeded' && items.length === 0 && (
           <EmptyState title="No posts yet" description="Be the first to post!" />
         )}
-        {filteredItems.map((p: Post) => (
+        {filteredItems.map((p: Post) => {
+          const tags = getTags(p.content || '')
+          if (tagFilter !== 'all' && !tags.includes(tagFilter)) return null
+          return (
           <Card key={p.id} className="p-5 hover:shadow-soft transition">
             <div className="text-sm text-ink-600 flex items-center gap-2">
               <Avatar name={p.user} />
@@ -172,9 +185,10 @@ export default function Feed() {
             </div>
             <div className="mt-2 whitespace-pre-wrap">{p.content}</div>
             <div className="mt-3 flex flex-wrap gap-2">
-              <Badge variant="brand">Dorm</Badge>
-              <Badge variant="accent">Club</Badge>
-              <Badge variant="neutral">Class</Badge>
+              {tags.includes('dorm') && <Badge variant="brand">Dorm</Badge>}
+              {tags.includes('club') && <Badge variant="accent">Club</Badge>}
+              {tags.includes('class') && <Badge variant="neutral">Class</Badge>}
+              {tags.includes('event') && <Badge variant="brand">Event</Badge>}
             </div>
             {p.media && (
               <img src={mediaUrl(p.media)} alt="post" className="mt-3 max-h-80 object-contain rounded-xl border border-border" />
@@ -199,12 +213,16 @@ export default function Feed() {
               </div>
             </div>
           </Card>
-        ))}
+          )
+        })}
         </div>
       </div>
 
       <div className="space-y-4">
         <CampusHighlights />
+        <ClubsWidget />
+        <StudyGroupsWidget />
+        <TrendingWidget />
         <Card className="p-5 bg-gradient-to-br from-accent-50 to-white">
           <h3 className="text-sm font-semibold text-ink-900">Upcoming Events</h3>
           <p className="mt-2 text-sm text-ink-600">Check out the latest campus events and RSVP.</p>

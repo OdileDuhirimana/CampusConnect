@@ -107,9 +107,17 @@ export default function Events() {
           <Card key={ev.id} className="p-5 hover:shadow-soft transition">
             <div className="flex justify-between items-start">
               <div>
-                <h3 className="font-semibold">{ev.title}</h3>
-                <div className="text-sm text-ink-600">{new Date(ev.start_time).toLocaleString()} → {new Date(ev.end_time).toLocaleString()}</div>
-                <div className="text-sm text-ink-600">{ev.location}</div>
+                <div className="flex items-center gap-3">
+                  <div className="flex flex-col items-center justify-center rounded-xl border border-border bg-white px-3 py-2 text-center">
+                    <div className="text-xs text-ink-500">{new Date(ev.start_time).toLocaleString(undefined, { month: 'short' })}</div>
+                    <div className="text-lg font-semibold text-ink-900">{new Date(ev.start_time).getDate()}</div>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">{ev.title}</h3>
+                    <div className="text-sm text-ink-600">{new Date(ev.start_time).toLocaleString()} → {new Date(ev.end_time).toLocaleString()}</div>
+                    <div className="text-sm text-ink-600">{ev.location}</div>
+                  </div>
+                </div>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <Badge variant="brand">Event</Badge>
                   <Badge variant="accent">Club</Badge>
