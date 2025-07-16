@@ -22,12 +22,16 @@ export default function Badge({
   className?: string
   onClick?: () => void
 }) {
+  const base = `inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium transition hover:-translate-y-[1px] ${variantClasses[variant]} ${className}`
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} className={`${base} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400`}>
+        {children}
+      </button>
+    )
+  }
   return (
-    <span
-      role={onClick ? 'button' : undefined}
-      onClick={onClick}
-      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium transition hover:-translate-y-[1px] ${variantClasses[variant]} ${className}`}
-    >
+    <span className={base}>
       {children}
     </span>
   )
