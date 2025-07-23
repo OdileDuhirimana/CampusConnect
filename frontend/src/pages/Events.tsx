@@ -137,6 +137,10 @@ export default function Events() {
             </div>
             {ev.description && <p className="mt-2 whitespace-pre-wrap">{ev.description}</p>}
             <div className="text-sm text-ink-600 mt-2">Participants: {ev.participants?.length ?? 0}</div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Badge variant="neutral">Free Snacks</Badge>
+              <Badge variant="brand">Campus</Badge>
+            </div>
           </Card>
         ))}
       </div>

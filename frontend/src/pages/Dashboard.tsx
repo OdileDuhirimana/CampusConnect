@@ -64,6 +64,16 @@ export default function Dashboard() {
           </div>
         </Card>
       </div>
+
+      <Card className="p-5">
+        <h2 className="text-sm font-semibold text-ink-900">Campus Map Quick Links</h2>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Badge variant="neutral">Library</Badge>
+          <Badge variant="neutral">Dining Hall</Badge>
+          <Badge variant="neutral">Student Center</Badge>
+          <Badge variant="neutral">Gym</Badge>
+        </div>
+      </Card>
     </div>
   )
 }

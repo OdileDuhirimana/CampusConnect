@@ -7,7 +7,7 @@ import Skeleton from '../components/Skeleton'
 import { addNotification } from '../store/notificationsSlice'
 import { API_ORIGIN } from '../api'
 import Avatar from '../components/Avatar'
-import { Button, Card, Input, EmptyState } from '../components/ui'
+import { Button, Card, Input, EmptyState, Badge } from '../components/ui'
 
 export default function Chat() {
   const dispatch = useAppDispatch()
@@ -93,6 +93,8 @@ export default function Chat() {
     }
   }
 
+  const selfId = user?.id
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card className="p-4">
@@ -142,15 +144,17 @@ export default function Chat() {
       <Card className="md:col-span-2 flex flex-col h-[70vh]">
         <div className="border-b px-4 py-2 flex items-center justify-between">
           <div className="font-semibold text-ink-900">{rooms.find(r => r.id === activeRoomId)?.name || 'Select a room'}</div>
+          <Badge variant="neutral">Live</Badge>
         </div>
         <div className="flex-1 overflow-auto p-4 space-y-2 bg-gradient-to-b from-brand-50/40 to-white">
           {activeMessages.map((m) => (
-            <div key={m.id} className="text-sm flex items-start gap-2">
-              <Avatar name={m.sender.username} size={24} />
-              <div>
-                <div><span className="font-medium">{m.sender.username}</span> <span className="text-xs text-ink-500">{new Date(m.created_at).toLocaleTimeString()}</span></div>
+            <div key={m.id} className={`flex items-end gap-2 text-sm ${m.sender.id === selfId ? 'justify-end' : 'justify-start'}`}>
+              {m.sender.id !== selfId && <Avatar name={m.sender.username} size={24} />}
+              <div className={`${m.sender.id === selfId ? 'bg-brand-600 text-white' : 'bg-white border border-border text-ink-900'} rounded-2xl px-3 py-2 shadow-soft max-w-[70%]`}>
+                <div className="text-xs opacity-80">{m.sender.username} · {new Date(m.created_at).toLocaleTimeString()}</div>
                 <div>{m.content}</div>
               </div>
+              {m.sender.id === selfId && <Avatar name={m.sender.username} size={24} />}
             </div>
           ))}
           {activeRoomId && activeMessages.length === 0 && (
