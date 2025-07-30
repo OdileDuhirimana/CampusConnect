@@ -6,6 +6,7 @@ import { useToast } from '../components/ToastProvider'
 import Skeleton from '../components/Skeleton'
 import { addNotification } from '../store/notificationsSlice'
 import { Button, Card, Input, Textarea, EmptyState, Badge } from '../components/ui'
+import AvatarStack from '../components/widgets/AvatarStack'
 
 export default function Events() {
   const dispatch = useAppDispatch()
@@ -136,7 +137,10 @@ export default function Events() {
               </div>
             </div>
             {ev.description && <p className="mt-2 whitespace-pre-wrap">{ev.description}</p>}
-            <div className="text-sm text-ink-600 mt-2">Participants: {ev.participants?.length ?? 0}</div>
+            <div className="mt-3 flex items-center justify-between">
+              <div className="text-sm text-ink-600">Participants: {ev.participants?.length ?? 0}</div>
+              <AvatarStack names={(ev.participants || []).map(p => p.user)} />
+            </div>
             <div className="mt-3 flex flex-wrap gap-2">
               <Badge variant="neutral">Free Snacks</Badge>
               <Badge variant="brand">Campus</Badge>

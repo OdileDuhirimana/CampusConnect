@@ -110,12 +110,12 @@ export default function Feed() {
               <h1 className="text-2xl font-semibold text-ink-900">Campus Feed</h1>
               <p className="mt-1 text-sm text-ink-600">See what’s happening around campus today.</p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline">Explore Clubs</Button>
-              <Button>New Post</Button>
-            </div>
+          <div className="flex gap-2">
+            <Button variant="outline">Explore Clubs</Button>
+            <Button>New Post</Button>
           </div>
-        </Card>
+        </div>
+      </Card>
 
         <Card className="p-5 bg-gradient-to-br from-brand-50 to-white">
           <h2 className="font-semibold text-ink-900 mb-2">Share something with campus</h2>
@@ -195,8 +195,10 @@ export default function Feed() {
             )}
             <div className="flex items-center gap-3 text-sm text-ink-600 mt-3">
               <span>{p.likes_count} likes</span>
-              <button aria-label="Like" className="text-brand-600" onClick={() => onLike(p.id)} type="button">Like</button>
-              <button aria-label="Unlike" className="text-ink-600" onClick={() => onUnlike(p.id)} type="button">Unlike</button>
+              <button aria-label="Like" className="text-brand-600 hover:text-brand-700" onClick={() => onLike(p.id)} type="button">Like</button>
+              <button aria-label="Unlike" className="text-ink-600 hover:text-ink-900" onClick={() => onUnlike(p.id)} type="button">Unlike</button>
+              <button aria-label="Comment" className="text-ink-600 hover:text-ink-900" type="button">Comment</button>
+              <button aria-label="Share" className="text-ink-600 hover:text-ink-900" type="button">Share</button>
             </div>
             <div className="mt-3 space-y-2">
               {p.comments?.map((c) => (
