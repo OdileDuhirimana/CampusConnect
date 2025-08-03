@@ -10,6 +10,7 @@ import Layout from './components/Layout'
 import RequireAuth from './components/RequireAuth'
 import NotFound from './pages/NotFound.tsx'
 import Dashboard from './pages/Dashboard.tsx'
+import Clubs from './pages/Clubs.tsx'
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
         )}
       />
       <Route path="/dashboard" element={<Layout><RequireAuth><Dashboard /></RequireAuth></Layout>} />
+      <Route path="/clubs" element={<Layout><Clubs /></Layout>} />
       <Route path="/events" element={<Layout><Events /></Layout>} />
       <Route path="/chat" element={<Layout><RequireAuth><Chat /></RequireAuth></Layout>} />
       <Route path="/profile" element={<Layout><RequireAuth><Profile /></RequireAuth></Layout>} />

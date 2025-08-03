@@ -24,6 +24,7 @@ export default function Feed() {
   const [commentMap, setCommentMap] = useState<Record<number, string>>({})
   const [filter, setFilter] = useState<'all' | 'media' | 'text'>('all')
   const [tagFilter, setTagFilter] = useState<'all' | 'dorm' | 'club' | 'class' | 'event'>('all')
+  const [query, setQuery] = useState('')
   const toast = useToast()
 
   useEffect(() => {
@@ -99,7 +100,7 @@ export default function Feed() {
     if (filter === 'media') return !!p.media
     if (filter === 'text') return !p.media
     return true
-  })
+  }).filter((p) => p.content.toLowerCase().includes(query.toLowerCase()))
 
   return (
     <div className="max-w-6xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -110,12 +111,14 @@ export default function Feed() {
               <h1 className="text-2xl font-semibold text-ink-900">Campus Feed</h1>
               <p className="mt-1 text-sm text-ink-600">See what’s happening around campus today.</p>
             </div>
-          <div className="flex gap-2">
-            <Button variant="outline">Explore Clubs</Button>
-            <Button>New Post</Button>
+            <div className="flex gap-2">
+              <Button variant="outline">Explore Clubs</Button>
+              <Button>New Post</Button>
+            </div>
           </div>
-        </div>
-      </Card>
+        </Card>
+
+        <Input placeholder="Search posts (clubs, dorms, events...)" value={query} onChange={(e) => setQuery(e.target.value)} />
 
         <Card className="p-5 bg-gradient-to-br from-brand-50 to-white">
           <h2 className="font-semibold text-ink-900 mb-2">Share something with campus</h2>
