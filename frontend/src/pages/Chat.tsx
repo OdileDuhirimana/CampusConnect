@@ -18,6 +18,9 @@ export default function Chat() {
   const [roomName, setRoomName] = useState('')
   const [msg, setMsg] = useState('')
   const [ws, setWs] = useState<WebSocket | null>(null)
+  const [roomQuery, setRoomQuery] = useState('')
+
+  const suggestedPeers = ['Jordan Lee', 'Avery Chen', 'Sam Patel', 'Riley Brooks', 'Taylor Kim']
 
   useEffect(() => {
     dispatch(fetchRooms())
@@ -95,16 +98,42 @@ export default function Chat() {
 
   const selfId = user?.id
 
+  const filteredRooms = rooms.filter((r) => r.name.toLowerCase().includes(roomQuery.toLowerCase()))
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card className="p-4">
         <div className="flex items-center justify-between mb-2">
-          <h2 className="font-semibold text-ink-900">Rooms</h2>
+          <h2 className="font-semibold text-ink-900">Messages</h2>
           {user && <span className="text-xs text-ink-500">{user.username}</span>}
         </div>
+        <Input
+          className="mb-3"
+          placeholder="Search chats"
+          value={roomQuery}
+          onChange={(e) => setRoomQuery(e.target.value)}
+        />
         <div className="flex gap-2 mb-3">
-          <Input className="flex-1" placeholder="Create room" value={roomName} onChange={(e) => setRoomName(e.target.value)} />
-          <Button onClick={onCreateRoom} size="sm" type="button" aria-label="Create room">Create</Button>
+          <Input className="flex-1" placeholder="Start a new chat" value={roomName} onChange={(e) => setRoomName(e.target.value)} />
+          <Button onClick={onCreateRoom} size="sm" type="button" aria-label="Create room">Start</Button>
+        </div>
+        <div className="mb-4">
+          <div className="text-xs text-ink-500 mb-2">Quick connect</div>
+          <div className="flex flex-wrap gap-2">
+            {suggestedPeers.map((name) => (
+              <Button
+                key={name}
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setRoomName(name)
+                  onCreateRoom()
+                }}
+              >
+                {name}
+              </Button>
+            ))}
+          </div>
         </div>
         <div className="divide-y border rounded min-h-[200px]">
           {status === 'loading' && (
@@ -119,10 +148,10 @@ export default function Chat() {
               <EmptyState title="Failed to load rooms" description={error || 'Please try again.'} />
             </div>
           )}
-          {status !== 'loading' && rooms.length === 0 && (
-            <div className="p-3 text-sm text-ink-500">No rooms yet. Create one to start chatting.</div>
+          {status !== 'loading' && filteredRooms.length === 0 && (
+            <div className="p-3 text-sm text-ink-500">No chats yet. Start a new conversation.</div>
           )}
-          {rooms.map((r) => {
+          {filteredRooms.map((r) => {
             const isActive = r.id === activeRoomId
             const isMember = !!r.members.find(m => m.id === user?.id)
             return (
