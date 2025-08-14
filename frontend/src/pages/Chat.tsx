@@ -16,6 +16,7 @@ export default function Chat() {
   const { user, token } = useAppSelector((s: RootState) => s.auth)
 
   const [roomName, setRoomName] = useState('')
+  const [mode, setMode] = useState<'dm' | 'group'>('dm')
   const [msg, setMsg] = useState('')
   const [ws, setWs] = useState<WebSocket | null>(null)
   const [roomQuery, setRoomQuery] = useState('')
@@ -57,7 +58,7 @@ export default function Chat() {
   const onCreateRoom = async () => {
     if (!token) { toast.add({ type: 'info', message: 'Login to create rooms' }); return }
     if (!roomName.trim()) return
-    const room = await dispatch(createRoom({ name: roomName, is_group: true })).unwrap()
+    const room = await dispatch(createRoom({ name: roomName, is_group: mode === 'group' })).unwrap()
     dispatch(setActiveRoom(room.id))
     setRoomName('')
     toast.add({ type: 'success', message: `Room "${room.name}" created` })
@@ -114,7 +115,11 @@ export default function Chat() {
           onChange={(e) => setRoomQuery(e.target.value)}
         />
         <div className="flex gap-2 mb-3">
-          <Input className="flex-1" placeholder="Start a new chat" value={roomName} onChange={(e) => setRoomName(e.target.value)} />
+          <Button size="sm" variant={mode === 'dm' ? 'primary' : 'outline'} onClick={() => setMode('dm')}>Direct</Button>
+          <Button size="sm" variant={mode === 'group' ? 'primary' : 'outline'} onClick={() => setMode('group')}>Group</Button>
+        </div>
+        <div className="flex gap-2 mb-3">
+          <Input className="flex-1" placeholder={mode === 'dm' ? 'Start a direct chat' : 'Create a group'} value={roomName} onChange={(e) => setRoomName(e.target.value)} />
           <Button onClick={onCreateRoom} size="sm" type="button" aria-label="Create room">Start</Button>
         </div>
         <div className="mb-4">
