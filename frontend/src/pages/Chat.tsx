@@ -23,6 +23,14 @@ export default function Chat() {
 
   const suggestedPeers = ['Jordan Lee', 'Avery Chen', 'Sam Patel', 'Riley Brooks', 'Taylor Kim']
 
+  const recentContacts = useMemo(() => {
+    const names = new Set<string>()
+    Object.values(messagesByRoom).forEach((msgs) => {
+      msgs.slice(-5).forEach((m) => names.add(m.sender.username))
+    })
+    return Array.from(names).slice(0, 5)
+  }, [messagesByRoom])
+
   useEffect(() => {
     dispatch(fetchRooms())
   }, [dispatch])
@@ -140,6 +148,26 @@ export default function Chat() {
             ))}
           </div>
         </div>
+        {recentContacts.length > 0 && (
+          <div className="mb-4">
+            <div className="text-xs text-ink-500 mb-2">Recent contacts</div>
+            <div className="flex flex-wrap gap-2">
+              {recentContacts.map((name) => (
+                <Button
+                  key={name}
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setRoomName(name)
+                    onCreateRoom()
+                  }}
+                >
+                  {name}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="divide-y border rounded min-h-[200px]">
           {status === 'loading' && (
             <div className="p-3 space-y-2">
