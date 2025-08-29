@@ -9,6 +9,7 @@ import Skeleton from '../components/Skeleton'
 import { addNotification } from '../store/notificationsSlice'
 import Avatar from '../components/Avatar'
 import { Button, Card, Textarea, Input, EmptyState, Badge } from '../components/ui'
+import { Link } from 'react-router-dom'
 import CampusHighlights from '../components/widgets/CampusHighlights'
 import ClubsWidget from '../components/widgets/ClubsWidget'
 import StudyGroupsWidget from '../components/widgets/StudyGroupsWidget'
@@ -232,6 +233,11 @@ export default function Feed() {
           <h3 className="text-sm font-semibold text-ink-900">Upcoming Events</h3>
           <p className="mt-2 text-sm text-ink-600">Check out the latest campus events and RSVP.</p>
           <Button className="mt-4" variant="outline">Explore Events</Button>
+        </Card>
+        <Card className="p-5">
+          <h3 className="text-sm font-semibold text-ink-900">Need to chat?</h3>
+          <p className="mt-2 text-sm text-ink-600">Start a conversation with classmates.</p>
+          <Link to="/chat"><Button className="mt-4" variant="outline">Open Messages</Button></Link>
         </Card>
       </div>
     </div>

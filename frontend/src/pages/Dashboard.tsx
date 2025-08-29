@@ -1,5 +1,6 @@
 import { useAppSelector } from '../hooks'
 import { Button, Card, Badge } from '../components/ui'
+import { Link } from 'react-router-dom'
 
 export default function Dashboard() {
   const { user } = useAppSelector((s) => s.auth)
@@ -19,7 +20,10 @@ export default function Dashboard() {
               <Badge variant="neutral">Study Groups</Badge>
             </div>
           </div>
-          <Button>Post Update</Button>
+          <div className="flex gap-2">
+            <Link to="/chat"><Button variant="outline">Go to Messages</Button></Link>
+            <Button>Post Update</Button>
+          </div>
         </div>
       </Card>
 

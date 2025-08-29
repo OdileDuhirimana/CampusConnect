@@ -7,7 +7,7 @@ import Skeleton from '../components/Skeleton'
 import { addNotification } from '../store/notificationsSlice'
 import { API_ORIGIN } from '../api'
 import Avatar from '../components/Avatar'
-import { Button, Card, Input, EmptyState, Badge } from '../components/ui'
+import { Button, Card, Input, EmptyState, Badge, Modal } from '../components/ui'
 
 export default function Chat() {
   const dispatch = useAppDispatch()
@@ -20,6 +20,8 @@ export default function Chat() {
   const [msg, setMsg] = useState('')
   const [ws, setWs] = useState<WebSocket | null>(null)
   const [roomQuery, setRoomQuery] = useState('')
+  const [newMessageOpen, setNewMessageOpen] = useState(false)
+  const [lastSeen, setLastSeen] = useState<Record<number, number>>({})
 
   const suggestedPeers = ['Jordan Lee', 'Avery Chen', 'Sam Patel', 'Riley Brooks', 'Taylor Kim']
 
@@ -30,6 +32,18 @@ export default function Chat() {
     })
     return Array.from(names).slice(0, 5)
   }, [messagesByRoom])
+
+  useEffect(() => {
+    if (activeRoomId) {
+      setLastSeen((s) => ({ ...s, [activeRoomId]: Date.now() }))
+    }
+  }, [activeRoomId])
+
+  const getUnreadCount = (roomId: number) => {
+    const last = lastSeen[roomId] || 0
+    const msgs = messagesByRoom[roomId] || []
+    return msgs.filter((m) => new Date(m.created_at).getTime() > last).length
+  }
 
   useEffect(() => {
     dispatch(fetchRooms())
@@ -130,6 +144,7 @@ export default function Chat() {
           <Input className="flex-1" placeholder={mode === 'dm' ? 'Start a direct chat' : 'Create a group'} value={roomName} onChange={(e) => setRoomName(e.target.value)} />
           <Button onClick={onCreateRoom} size="sm" type="button" aria-label="Create room">Start</Button>
         </div>
+        <Button variant="outline" className="w-full mb-4" onClick={() => setNewMessageOpen(true)}>New Message</Button>
         <div className="mb-4">
           <div className="text-xs text-ink-500 mb-2">Quick connect</div>
           <div className="flex flex-wrap gap-2">
@@ -187,12 +202,14 @@ export default function Chat() {
           {filteredRooms.map((r) => {
             const isActive = r.id === activeRoomId
             const isMember = !!r.members.find(m => m.id === user?.id)
+            const unread = getUnreadCount(r.id)
             return (
               <div key={r.id} className={`p-3 text-sm flex items-center justify-between ${isActive ? 'bg-brand-50' : ''}`}>
                 <button className="text-left flex-1" onClick={() => dispatch(setActiveRoom(r.id))} type="button" aria-label={`Open room ${r.name}`}>
                   <div className="font-medium">{r.name}</div>
                   <div className="text-ink-500 text-xs">Members: {r.members.length}</div>
                 </button>
+                {unread > 0 && <Badge variant="accent">{unread}</Badge>}
                 {isMember ? (
                   <button className="text-xs text-danger" onClick={() => onLeave(r.id)} type="button" aria-label="Leave room">Leave</button>
                 ) : (
@@ -223,11 +240,37 @@ export default function Chat() {
             <EmptyState title="No messages yet" description="Send the first message to start the conversation." className="bg-transparent border-none" />
           )}
         </div>
-        <div className="border-t p-3 flex gap-2">
+        <div className="border-t p-3 flex flex-col gap-2">
           <Input className="flex-1" placeholder={activeRoomId ? 'Type a message' : 'Select a room to start chatting'} value={msg} onChange={(e) => setMsg(e.target.value)} />
-          <Button onClick={onSend} type="button" aria-label="Send message">Send</Button>
+          <div className="flex items-center justify-between">
+            <div className="text-xs text-ink-500">{msg.trim() ? 'You are typing…' : ' '}</div>
+            <Button onClick={onSend} type="button" aria-label="Send message">Send</Button>
+          </div>
         </div>
       </Card>
+
+      <Modal
+        open={newMessageOpen}
+        onClose={() => setNewMessageOpen(false)}
+        title="Start a new conversation"
+        footer={(
+          <>
+            <Button variant="outline" onClick={() => setNewMessageOpen(false)}>Cancel</Button>
+            <Button onClick={() => { onCreateRoom(); setNewMessageOpen(false) }}>Start</Button>
+          </>
+        )}
+      >
+        <div className="space-y-3">
+          <Input placeholder="Search classmates" value={roomName} onChange={(e) => setRoomName(e.target.value)} />
+          <div className="flex flex-wrap gap-2">
+            {suggestedPeers.map((name) => (
+              <Button key={name} variant="outline" size="sm" onClick={() => setRoomName(name)}>
+                {name}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }
