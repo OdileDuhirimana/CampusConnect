@@ -46,19 +46,21 @@ export default function Chat() {
   }
 
   useEffect(() => {
+    if (!token) return
     dispatch(fetchRooms())
-  }, [dispatch])
+  }, [dispatch, token])
 
   useEffect(() => {
+    if (!token) return
     if (activeRoomId) dispatch(fetchMessages(activeRoomId))
-  }, [activeRoomId, dispatch])
+  }, [activeRoomId, dispatch, token])
 
   // Optional WebSocket live updates if backend supports Channels at /ws/chat/{id}/
   useEffect(() => {
     try {
       ws?.close()
     } catch {}
-    if (!activeRoomId) return
+    if (!activeRoomId || !token) return
     const wsUrl = API_ORIGIN.replace('http', 'ws') + `/ws/chat/${activeRoomId}/`
     let socket: WebSocket | null = null
     try {
@@ -73,7 +75,7 @@ export default function Chat() {
       try { socket?.close() } catch {}
       setWs(null)
     }
-  }, [activeRoomId, dispatch])
+  }, [activeRoomId, dispatch, token])
 
   const activeMessages = useMemo(() => (activeRoomId ? (messagesByRoom[activeRoomId] || []) : []), [messagesByRoom, activeRoomId])
 
@@ -189,6 +191,11 @@ export default function Chat() {
               <Skeleton className="h-4 w-2/3" />
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-4 w-3/5" />
+            </div>
+          )}
+          {!token && (
+            <div className="p-3">
+              <EmptyState title="Log in to start chatting" description="Create rooms and message classmates once you're signed in." />
             </div>
           )}
           {status === 'failed' && (
