@@ -33,6 +33,11 @@ export default function Chat() {
     return Array.from(names).slice(0, 5)
   }, [messagesByRoom])
 
+  const modalSuggestions = useMemo(() => {
+    const all = Array.from(new Set([...suggestedPeers, ...recentContacts]))
+    return all.filter((n) => n.toLowerCase().includes(roomName.toLowerCase()))
+  }, [suggestedPeers, recentContacts, roomName])
+
   useEffect(() => {
     if (activeRoomId) {
       setLastSeen((s) => ({ ...s, [activeRoomId]: Date.now() }))
@@ -269,11 +274,18 @@ export default function Chat() {
       >
         <div className="space-y-3">
           <Input placeholder="Search classmates" value={roomName} onChange={(e) => setRoomName(e.target.value)} />
-          <div className="flex flex-wrap gap-2">
-            {suggestedPeers.map((name) => (
-              <Button key={name} variant="outline" size="sm" onClick={() => setRoomName(name)}>
-                {name}
-              </Button>
+          <div className="flex flex-col gap-2">
+            {modalSuggestions.map((name) => (
+              <button
+                key={name}
+                type="button"
+                className="flex items-center gap-3 rounded-xl border border-border px-3 py-2 text-sm text-ink-700 hover:bg-brand-50"
+                onClick={() => setRoomName(name)}
+              >
+                <Avatar name={name} size={28} />
+                <div className="flex-1 text-left">{name}</div>
+                <Badge variant="neutral">Student</Badge>
+              </button>
             ))}
           </div>
         </div>
