@@ -129,6 +129,10 @@ export default function Chat() {
   const selfId = user?.id
 
   const filteredRooms = rooms.filter((r) => r.name.toLowerCase().includes(roomQuery.toLowerCase()))
+  const getLastMessage = (roomId: number) => {
+    const msgs = messagesByRoom[roomId] || []
+    return msgs.length ? msgs[msgs.length - 1] : null
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -215,11 +219,14 @@ export default function Chat() {
             const isActive = r.id === activeRoomId
             const isMember = !!r.members.find(m => m.id === user?.id)
             const unread = getUnreadCount(r.id)
+            const last = getLastMessage(r.id)
             return (
               <div key={r.id} className={`p-3 text-sm flex items-center justify-between ${isActive ? 'bg-brand-50' : ''}`}>
                 <button className="text-left flex-1" onClick={() => dispatch(setActiveRoom(r.id))} type="button" aria-label={`Open room ${r.name}`}>
                   <div className="font-medium">{r.name}</div>
-                  <div className="text-ink-500 text-xs">Members: {r.members.length}</div>
+                  <div className="text-ink-500 text-xs truncate">
+                    {last ? `${last.sender.username}: ${last.content}` : `Members: ${r.members.length}`}
+                  </div>
                 </button>
                 {unread > 0 && <Badge variant="accent">{unread}</Badge>}
                 {isMember ? (
