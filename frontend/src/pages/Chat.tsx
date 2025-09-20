@@ -262,6 +262,10 @@ export default function Chat() {
         <div className="border-t p-3 flex flex-col gap-2">
           <Input className="flex-1" placeholder={activeRoomId ? 'Type a message' : 'Select a room to start chatting'} value={msg} onChange={(e) => setMsg(e.target.value)} />
           <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" aria-label="Add emoji">😊</Button>
+              <Button variant="ghost" size="sm" aria-label="Attach file">📎</Button>
+            </div>
             <div className="text-xs text-ink-500">{msg.trim() ? 'You are typing…' : ' '}</div>
             <Button onClick={onSend} type="button" aria-label="Send message">Send</Button>
           </div>
