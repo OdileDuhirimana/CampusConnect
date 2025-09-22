@@ -11,6 +11,7 @@ import RequireAuth from './components/RequireAuth'
 import NotFound from './pages/NotFound.tsx'
 import Dashboard from './pages/Dashboard.tsx'
 import Clubs from './pages/Clubs.tsx'
+import ClubDetail from './pages/ClubDetail.tsx'
 
 export default function App() {
   return (
@@ -25,8 +26,9 @@ export default function App() {
       />
       <Route path="/dashboard" element={<Layout><RequireAuth><Dashboard /></RequireAuth></Layout>} />
       <Route path="/clubs" element={<Layout><Clubs /></Layout>} />
+      <Route path="/clubs/:clubId" element={<Layout><ClubDetail /></Layout>} />
       <Route path="/events" element={<Layout><Events /></Layout>} />
-      <Route path="/chat" element={<Layout><RequireAuth><Chat /></RequireAuth></Layout>} />
+      <Route path="/chat" element={<Layout><Chat /></Layout>} />
       <Route path="/profile" element={<Layout><RequireAuth><Profile /></RequireAuth></Layout>} />
       <Route path="/settings" element={<Layout><RequireAuth><Settings /></RequireAuth></Layout>} />
       <Route path="/login" element={<Login />} />
