@@ -14,6 +14,8 @@ import CampusHighlights from '../components/widgets/CampusHighlights'
 import ClubsWidget from '../components/widgets/ClubsWidget'
 import StudyGroupsWidget from '../components/widgets/StudyGroupsWidget'
 import TrendingWidget from '../components/widgets/TrendingWidget'
+import StoriesBar from '../components/widgets/StoriesBar'
+import PollsCard from '../components/widgets/PollsCard'
 
 export default function Feed() {
   const dispatch = useAppDispatch()
@@ -117,6 +119,10 @@ export default function Feed() {
               <Button>New Post</Button>
             </div>
           </div>
+        </Card>
+
+        <Card className="p-4">
+          <StoriesBar />
         </Card>
 
         <Input placeholder="Search posts (clubs, dorms, events...)" value={query} onChange={(e) => setQuery(e.target.value)} />
@@ -229,6 +235,7 @@ export default function Feed() {
         <ClubsWidget />
         <StudyGroupsWidget />
         <TrendingWidget />
+        <PollsCard />
         <Card className="p-5 bg-gradient-to-br from-accent-50 to-white">
           <h3 className="text-sm font-semibold text-ink-900">Upcoming Events</h3>
           <p className="mt-2 text-sm text-ink-600">Check out the latest campus events and RSVP.</p>
