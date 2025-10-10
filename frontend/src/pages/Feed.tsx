@@ -203,12 +203,17 @@ export default function Feed() {
             {p.media && (
               <img src={mediaUrl(p.media)} alt="post" className="mt-3 max-h-80 object-contain rounded-xl border border-border" />
             )}
-            <div className="flex items-center gap-3 text-sm text-ink-600 mt-3">
+            <div className="flex flex-wrap items-center gap-3 text-sm text-ink-600 mt-3">
               <span>{p.likes_count} likes</span>
               <button aria-label="Like" className="text-brand-600 hover:text-brand-700" onClick={() => onLike(p.id)} type="button">Like</button>
               <button aria-label="Unlike" className="text-ink-600 hover:text-ink-900" onClick={() => onUnlike(p.id)} type="button">Unlike</button>
               <button aria-label="Comment" className="text-ink-600 hover:text-ink-900" type="button">Comment</button>
               <button aria-label="Share" className="text-ink-600 hover:text-ink-900" type="button">Share</button>
+              <div className="flex items-center gap-2">
+                <button className="px-2 py-1 rounded-full bg-brand-50 text-brand-700 text-xs" type="button">😂 12</button>
+                <button className="px-2 py-1 rounded-full bg-brand-50 text-brand-700 text-xs" type="button">🔥 8</button>
+                <button className="px-2 py-1 rounded-full bg-brand-50 text-brand-700 text-xs" type="button">😮 4</button>
+              </div>
             </div>
             <div className="mt-3 space-y-2">
               {p.comments?.map((c) => (
