@@ -14,6 +14,7 @@ import Clubs from './pages/Clubs.tsx'
 import ClubDetail from './pages/ClubDetail.tsx'
 import Gossip from './pages/Gossip.tsx'
 import Friends from './pages/Friends.tsx'
+import Groups from './pages/Groups.tsx'
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
       <Route path="/clubs" element={<Layout><Clubs /></Layout>} />
       <Route path="/clubs/:clubId" element={<Layout><ClubDetail /></Layout>} />
       <Route path="/friends" element={<Layout><Friends /></Layout>} />
+      <Route path="/groups" element={<Layout><Groups /></Layout>} />
       <Route path="/whispers" element={<Layout><Gossip /></Layout>} />
       <Route path="/events" element={<Layout><Events /></Layout>} />
       <Route path="/chat" element={<Layout><Chat /></Layout>} />

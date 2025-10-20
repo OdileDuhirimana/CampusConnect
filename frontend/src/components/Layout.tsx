@@ -40,6 +40,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <NavLink to="/" className={navLinkClass}>Feed</NavLink>
             <NavLink to="/clubs" className={navLinkClass}>Clubs</NavLink>
             <NavLink to="/friends" className={navLinkClass}>Connections</NavLink>
+            <NavLink to="/groups" className={navLinkClass}>Groups</NavLink>
             <NavLink to="/whispers" className={navLinkClass}>Whispers</NavLink>
             <NavLink to="/events" className={navLinkClass}>Events</NavLink>
             <NavLink to="/chat" className={navLinkClass}>Messages</NavLink>
@@ -78,6 +79,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <NavLink to="/" className={navLinkClass} onClick={() => setMobileOpen(false)}>Feed</NavLink>
               <NavLink to="/clubs" className={navLinkClass} onClick={() => setMobileOpen(false)}>Clubs</NavLink>
               <NavLink to="/friends" className={navLinkClass} onClick={() => setMobileOpen(false)}>Connections</NavLink>
+              <NavLink to="/groups" className={navLinkClass} onClick={() => setMobileOpen(false)}>Groups</NavLink>
               <NavLink to="/whispers" className={navLinkClass} onClick={() => setMobileOpen(false)}>Whispers</NavLink>
               <NavLink to="/events" className={navLinkClass} onClick={() => setMobileOpen(false)}>Events</NavLink>
               <NavLink to="/chat" className={navLinkClass} onClick={() => setMobileOpen(false)}>Messages</NavLink>
