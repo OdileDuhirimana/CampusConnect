@@ -7,15 +7,18 @@ import { store } from './store'
 import { BrowserRouter } from 'react-router-dom'
 import ToastProvider from './components/ToastProvider'
 import ErrorBoundary from './components/feedback/ErrorBoundary'
+import AuthBootstrap from './components/AuthBootstrap'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter>
         <ToastProvider>
-          <ErrorBoundary>
-            <App />
-          </ErrorBoundary>
+          <AuthBootstrap>
+            <ErrorBoundary>
+              <App />
+            </ErrorBoundary>
+          </AuthBootstrap>
         </ToastProvider>
       </BrowserRouter>
     </Provider>
