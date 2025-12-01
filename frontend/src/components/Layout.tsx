@@ -56,7 +56,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             ) : (
               <div className="hidden md:flex items-center gap-3 text-sm">
                 <Link to="/login" className="text-ink-700 hover:text-ink-900">Login</Link>
-                <Link to="/register" className="text-white bg-brand-600 rounded-full px-4 py-1.5 shadow-soft">Sign up</Link>
+                <Link to="/register" className="text-white bg-blue-600 bg-brand-600 rounded-full px-4 py-1.5 shadow-soft">Sign up</Link>
               </div>
             )}
             <Button
@@ -93,7 +93,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 ) : (
                   <div className="flex flex-col gap-2">
                     <Link to="/login" className="text-ink-700 hover:text-ink-900" onClick={() => setMobileOpen(false)}>Login</Link>
-                    <Link to="/register" className="text-white bg-brand-600 rounded-full px-4 py-2 text-center shadow-soft" onClick={() => setMobileOpen(false)}>Sign up</Link>
+                    <Link to="/register" className="text-white bg-blue-600 bg-brand-600 rounded-full px-4 py-2 text-center shadow-soft" onClick={() => setMobileOpen(false)}>Sign up</Link>
                   </div>
                 )}
               </div>

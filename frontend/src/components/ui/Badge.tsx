@@ -3,12 +3,12 @@ import type { ReactNode } from 'react'
 type Variant = 'brand' | 'accent' | 'success' | 'warning' | 'danger' | 'neutral'
 
 const variantClasses: Record<Variant, string> = {
-  brand: 'bg-brand-50 text-brand-700 border-brand-100',
-  accent: 'bg-accent-50 text-accent-700 border-accent-100',
+  brand: 'bg-blue-50 bg-brand-50 text-blue-700 text-brand-700 border-blue-100 border-brand-100',
+  accent: 'bg-orange-50 bg-accent-50 text-orange-700 text-accent-700 border-orange-100 border-accent-100',
   success: 'bg-emerald-50 text-emerald-700 border-emerald-100',
   warning: 'bg-amber-50 text-amber-700 border-amber-100',
   danger: 'bg-red-50 text-red-700 border-red-100',
-  neutral: 'bg-gray-50 text-ink-600 border-border',
+  neutral: 'bg-gray-50 text-gray-700 text-ink-600 border-gray-200 border-border',
 }
 
 export default function Badge({
