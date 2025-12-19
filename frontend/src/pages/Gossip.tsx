@@ -47,7 +47,7 @@ export default function Gossip() {
   return (
     <div className="max-w-6xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-4">
-        <Card className="p-6 bg-gradient-to-br from-ink-900 via-ink-700 to-accent-500 text-white">
+        <Card className="p-6 bg-gradient-to-br from-ink-900 via-ink-700 to-accent-500 text-white shadow-card">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="text-xs uppercase tracking-widest text-white/70">Campus Whisper</div>

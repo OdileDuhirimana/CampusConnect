@@ -108,7 +108,7 @@ export default function Feed() {
   return (
     <div className="max-w-6xl mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-4">
-        <Card className="p-6 bg-gradient-to-br from-brand-50 via-white to-accent-50">
+        <Card className="p-6 bg-gradient-to-br from-brand-50 via-white to-citrus-50">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-2xl font-semibold text-ink-900">Campus Feed</h1>
@@ -121,13 +121,13 @@ export default function Feed() {
           </div>
         </Card>
 
-        <Card className="p-4">
+        <Card className="p-4 bg-gradient-to-r from-brand-50 via-white to-citrus-50">
           <StoriesBar />
         </Card>
 
         <Input placeholder="Search posts (clubs, dorms, events...)" value={query} onChange={(e) => setQuery(e.target.value)} />
 
-        <Card className="p-5 bg-gradient-to-br from-brand-50 to-white">
+        <Card className="p-5 bg-gradient-to-br from-mint-50 to-white">
           <h2 className="font-semibold text-ink-900 mb-2">Share something with campus</h2>
           <Textarea rows={3} placeholder="What's happening on campus?" value={content} onChange={(e) => setContent(e.target.value)} />
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3">
@@ -241,7 +241,7 @@ export default function Feed() {
         <StudyGroupsWidget />
         <TrendingWidget />
         <PollsCard />
-        <Card className="p-5 bg-gradient-to-br from-accent-50 to-white">
+        <Card className="p-5 bg-gradient-to-br from-accent-50 to-citrus-50">
           <h3 className="text-sm font-semibold text-ink-900">Upcoming Events</h3>
           <p className="mt-2 text-sm text-ink-600">Check out the latest campus events and RSVP.</p>
           <Button className="mt-4" variant="outline">Explore Events</Button>

@@ -33,7 +33,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-border">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           <Link to="/" className="font-semibold text-lg text-ink-900">
-            <span className="text-brand-600">Campus</span>Connect
+            <span className="text-brand-600">Campus</span><span className="text-accent-500">Connect</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6 text-sm">
             <NavLink to="/dashboard" className={navLinkClass}>Dashboard</NavLink>

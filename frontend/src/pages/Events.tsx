@@ -51,7 +51,7 @@ export default function Events() {
 
   return (
     <div className="max-w-5xl mx-auto p-4 space-y-6">
-      <Card className="p-6 bg-gradient-to-br from-brand-50 via-white to-accent-50">
+      <Card className="p-6 bg-gradient-to-br from-brand-50 via-white to-citrus-50">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-semibold text-ink-900">Campus Events</h1>
@@ -64,7 +64,7 @@ export default function Events() {
         </div>
       </Card>
 
-      <Card className="p-5 space-y-3 bg-gradient-to-br from-brand-50 to-white">
+      <Card className="p-5 space-y-3 bg-gradient-to-br from-mint-50 to-white">
         <h2 className="font-semibold text-ink-900">Create an event</h2>
         <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
         <Textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
