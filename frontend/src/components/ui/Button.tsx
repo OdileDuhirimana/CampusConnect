@@ -4,7 +4,7 @@ type Variant = 'primary' | 'ghost' | 'outline' | 'danger'
 type Size = 'sm' | 'md' | 'lg'
 
 const variantClasses: Record<Variant, string> = {
-  primary: 'bg-blue-600 bg-brand-600 bg-gradient-to-r from-brand-500 to-accent-500 text-white hover:from-brand-600 hover:to-accent-600 shadow-soft',
+  primary: 'bg-brand-500 bg-gradient-to-r from-brand-500 to-accent-500 text-white hover:from-brand-600 hover:to-accent-600 shadow-soft',
   ghost: 'bg-transparent text-gray-700 text-ink-700 hover:bg-gray-100',
   outline: 'border border-gray-300 border-border text-gray-700 text-ink-700 hover:bg-gray-50',
   danger: 'bg-red-600 bg-danger text-white hover:bg-red-700',
