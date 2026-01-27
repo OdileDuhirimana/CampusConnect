@@ -1,0 +1,15 @@
+# Core framework
+Django==5.2.7
+
+# REST API
+djangorestframework
+djangorestframework-simplejwt
+
+# CORS
+django-cors-headers
+
+# WebSockets / ASGI
+channels
+
+# Image processing (for ImageField in posts.models)
+Pillow
