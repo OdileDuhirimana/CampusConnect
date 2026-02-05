@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import JsonResponse
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/health/', lambda request: JsonResponse({'ok': True}), name='health'),
     path('api/', include('users.urls')),
     path('api/', include('posts.urls')),
     path('api/', include('events.urls')),

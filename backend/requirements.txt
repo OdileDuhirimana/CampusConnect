@@ -1,15 +1,10 @@
-# Core framework
 Django==5.2.7
-
-# REST API
-djangorestframework
-djangorestframework-simplejwt
-
-# CORS
-django-cors-headers
-
-# WebSockets / ASGI
-channels
-
-# Image processing (for ImageField in posts.models)
-Pillow
+djangorestframework==3.16.1
+djangorestframework-simplejwt==5.5.1
+django-cors-headers==4.9.0
+channels==4.3.1
+channels-redis==4.3.0
+daphne==4.2.1
+dj-database-url==2.2.0
+psycopg2-binary==2.9.9
+Pillow==11.0.0
